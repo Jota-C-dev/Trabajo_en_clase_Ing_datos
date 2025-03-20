@@ -3,6 +3,13 @@ CREATE SCHEMA reto;
 USE reto;
 
 -- tablas
+create table cargo(
+idcargo varchar(45) primary key,
+nombreCargo varchar(45) not null,
+rangoCargo varchar(45) not null,
+DescripcionCargo varchar(45) not null
+);
+
 CREATE TABLE departamentos (
     idDepartamento INT AUTO_INCREMENT PRIMARY KEY,  
     nombreDepartamento VARCHAR(100) NOT NULL  
@@ -15,7 +22,9 @@ CREATE TABLE empleados (
     salarioEmpleado DECIMAL(10, 2) NOT NULL,  
     fechaContratacion DATE NOT NULL,  
     idDepartamento INT,  
-    FOREIGN KEY (idDepartamento) REFERENCES departamentos(idDepartamento)  
+    idcargoFK varchar(45) not null,
+    FOREIGN KEY (idDepartamento) REFERENCES departamentos(idDepartamento),
+    foreign key (idcargoFK) references cargo(idcargo)
 );
 
 -- datos
@@ -27,13 +36,19 @@ INSERT INTO departamentos (nombreDepartamento) VALUES
 ('Recursos Humanos'),
 ('Finanzas');
 
-INSERT INTO empleados (nombreEmpleado, edadEmpleado, salarioEmpleado, fechaContratacion, idDepartamento) VALUES
-('Ana Pérez', 28, 4500.00, '2021-05-15', 1),  
-('Carlos López', 35, 3500.00, '2020-07-10', 2),
-('Maria García', 32, 6000.00, '2022-02-20', 3),
-('Luis Rodríguez', 41, 4200.00, '2023-03-30', 1), 
-('Elena Fernández', 38, 8000.00, '2021-09-05', 4);
+INSERT INTO empleados (nombreEmpleado, edadEmpleado, salarioEmpleado, fechaContratacion, idDepartamento, idcargoFK) VALUES
+('Ana Pérez', 28, 4500.00, '2021-05-15', 1,'b'),  
+('Carlos López', 35, 3500.00, '2020-07-10', 2 ,'c'),
+('Maria García', 32, 6000.00, '2022-02-20', 3,'c'),
+('Luis Rodríguez', 41, 4200.00, '2023-03-30', 1,'d'), 
+('Elena Fernández', 38, 8000.00, '2021-09-05', 4,'a');
 
+insert into cargo (idcargo, nombreCargo, rangoCargo, DescripcionCargo) values
+('a','gerente','1','puesto gerencial donde el empleado tiene poca experiencia'),
+('b','desarrollador frontend','2','desarrollador frontend con experiencia media'),
+('c','desarrollador backend','3','desarrollador frontend con mucha experiencia'),
+('d','data engenieer','2','ingeniero de datos con experiencia media'),
+('e','secretario','2','secretario con experiencia media');
 
 -- punto uno
 SELECT nombreEmpleado, edadEmpleado, salarioEmpleado 
@@ -134,3 +149,28 @@ select idDepartamento, count(*) as 'total Empleados' from empleados group by idD
 -- sintaxis: update nombretabla set campo='lo que se reemplaza' where campo condicion
 
 update empleados set salarioEmpleado='10000' where idEmpleado='1';
+
+/*mostrar todos los empleados y sus departamentos*/
+select nombreEmpleado, nombreDepartamento from empleados
+inner join empleados
+on empleados.idDepartamento=departamento.idDepartamento;
+
+-- consultar tosdos los cargos que tengan un rango especifico
+select nombreCargo from cargo where rangoCargo between 1 and 5;
+
+-- mostrar en pantalla los empleados que tengan un cargo asignado
+select  nombreEmpleado, nombreCargo from empleados inner join cargo on empleados.idcargoFK=cargo.idcargo;
+
+-- mostrar todos los empleados con mas de 3 años en la empresa, que departamento pertenecen, que cargo tienen y cuanto ganan 
+select nombreEmpleado, fechaContratacion, nombreCargo, rangoCargo, nombreDepartamento, salarioEmpleado from empleados
+inner join cargo on empleados.idcargoFK=cargo.idcargo inner join departamentos on empleados.idDepartamento=departamentos.idDepartamento
+where timestamp(year, fechaContratacion, curdate()) > 3;
+
+-- mostrar toda la informacion de un empleado, nombre, fecha de contratacion, departamento donde está, cargo actual y rango actual
+select nombreEmpleado, fechaContratacion, nombreCargo, rangoCargo, nombreDepartamento from empleados
+inner join cargo on empleados.idcargoFK=cargo.idcargo inner join departamentos on empleados.idDepartamento=departamentos.idDepartamento;
+
+-- mostrar todos los empleados sin rango asignado
+select  nombreEmpleado, nombreCargo from empleados inner join cargo on empleados.idcargoFK=!cargo.idcargo;
+
+describe empleados;
