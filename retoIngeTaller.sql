@@ -52,6 +52,8 @@ FROM empleados e
 JOIN departamentos d ON e.idDepartamento = d.idDepartamento
 WHERE d.nombreDepartamento = 'Ventas';
 
+-- punto tres
+
 -- punto cuatro
 SELECT nombreEmpleado, edadEmpleado 
 FROM empleados 
@@ -67,6 +69,9 @@ SELECT d.nombreDepartamento AS departamento, COUNT(e.idEmpleado) AS cantidadEmpl
 FROM empleados e
 JOIN departamentos d ON e.idDepartamento = d.idDepartamento
 GROUP BY d.nombreDepartamento;
+
+-- punto seis
+
 
 -- punto siete
 SELECT AVG(salarioEmpleado) AS salarioPromedio 
@@ -87,3 +92,45 @@ SELECT nombreEmpleado, salarioEmpleado
 FROM empleados 
 ORDER BY salarioEmpleado DESC 
 LIMIT 1;
+
+-- punto diez
+SELECT nombreEmpleado, salarioEmpleado FROM empleados WHERE salarioEmpleado=(SELECT max(salarioEmpleado) from empleados);
+
+/*consulta con rango "between"*/
+SELECT * FROM empleados WHERE salarioEmpleado BETWEEN 8000 AND 10000;
+
+/*consultar dentro de una lista de valores in */
+select * from empleados where (idDepartamento in (1,2));
+
+
+/*///////////////////////////////////////////////////*/
+select salarioEmpleado from empleados order by salarioEmpleado desc;
+
+select nombreEmpleado from empleados where idDepartamento is null;
+/*select * from departamentos where;*/
+
+select *,(2025-fechaContratacion) as 'tiempo contratado' from empleados;
+select nombreEmpleado, fechaContratacion, timestampdiff(year, fechaContratacion, curdate()) as 'años trabajados' from empleados;
+
+SELECT nombreEmpleado, salarioEmpleado FROM empleados ORDER BY salarioEmpleado DESC LIMIT 3;
+
+select count(*) from empleados where salarioEmpleado > (select avg(salarioEmpleado) from empleados);
+
+select nombreDepartamento,(select count(*) empleados where idDepartamento = idDepartamento) 
+as 'cantidad gente' from departamentos order by (select count(*) empleados where idDepartamento = idDepartamento) desc;
+
+
+select nombreEmpleado, salarioEmpleado, timestamp(year, fechaContratacion, curdate()) as 'años trabajando' from empleados
+where (timestamp(year, fechaContratacion, curdate()))>=(select (max(timestamp(year,fechaContratacion,curdate()))) as 'mayor años')
+and salarioEmpleado>=(select max(salarioEmpleado) from empleados) order by salario desc limit 5; 
+
+
+
+/*having*/
+
+select idDepartamento, count(*) as 'total Empleados' from empleados group by idDepartamento having count(*)>=0;
+
+/*modificacion*/
+-- sintaxis: update nombretabla set campo='lo que se reemplaza' where campo condicion
+
+update empleados set salarioEmpleado='10000' where idEmpleado='1';
