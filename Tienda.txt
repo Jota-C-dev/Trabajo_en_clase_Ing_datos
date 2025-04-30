@@ -1,0 +1,18 @@
+use Tienda
+switched to db Tienda
+db.createCollection("usuario")
+db.usuario.insertMany([{nombre:"juan", documento:1234, telefono:3215634}])
+db.usuario.insertMany([{nombre:"rosa", documento:1235, telefono: 43123424}])
+db.usuario.insertMany([{nombre:"pablo", documento: 1263, telefono:125542}, {nombre:"arturo", documento: 2132, telefono: 71513232}])
+db.usuario.insertMany([{nombre:"david", documento: 11923, telefono:1259942}])
+db.usuario.find()
+db.usuario.find().pretty()
+db.usuario.find({documento:{$eq: 2132}})
+db.usuario.find(ObjectId('68124bd2d360ef0725007329'))
+db.createCollection("ventas")
+db.createCollection("producto")
+db.producto.insertMany([{nombre:"portatil Asus", precio:2500 , cantidad:10}, {nombre:"portatil Acer", precio:2000, cantidad:15},
+ {nombre:"tarjetas RAM", precio:300, cantidad:45}, {nombre:"tarjetas SSD", precio:250, cantidad:68}, {nombre:"celular Samsung S23", precio:1400, cantidad:18}])
+db.ventas.insertMany([{producto:"tarjetas SSD" , cantidad:2 , totalPagar:500},{producto:"tarjetas RAM", cantidad:4, totalPagar:600},
+                      {producto:"tarjetas SSD", cantidad:1 , totalPagar:250}, {producto:"portatil Asus", cantidad:1, totalPagar:2500},
+                      {producto:"portatil Acer", cantidad:1, totalPagar:2000}])
