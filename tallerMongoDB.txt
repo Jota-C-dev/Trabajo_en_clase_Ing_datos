@@ -1,0 +1,74 @@
+use tallerMongoDB
+switched to db tallerMongoDB
+db.createCollection("usuario")
+show collections
+usuario
+db.createCollection("producto")
+{ ok: 1 }
+db.usuario.insertMany({nombre: "Juan Perez", edad: 30, correo:"juan.perez@urosaio.com"},
+{nombre:"Ana Lopez", edad:25 ,correo:"ana.lopez@urosario.com"}, {nombre:"Luis Torres", edad:35, correo:"luis.torres@urosario.com"})
+MongoInvalidArgumentError: Argument "docs" must be an array of documents
+db.usuario.insertMany([{nombre: "Juan Perez", edad: 30, correo:"juan.perez@urosaio.com"},
+{nombre:"Ana Lopez", edad:25 ,correo:"ana.lopez@urosario.com"}, 
+{nombre:"Luis Torres", edad:35, correo:"luis.torres@urosario.com"}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68223fb8881223b0dbd30362'),
+    '1': ObjectId('68223fb8881223b0dbd30363'),
+    '2': ObjectId('68223fb8881223b0dbd30364')
+  }
+}
+db.usuario.find()
+{
+  _id: ObjectId('68223fb8881223b0dbd30362'),
+  nombre: 'Juan Perez',
+  edad: 30,
+  correo: 'juan.perez@urosaio.com'
+}
+{
+  _id: ObjectId('68223fb8881223b0dbd30363'),
+  nombre: 'Ana Lopez',
+  edad: 25,
+  correo: 'ana.lopez@urosario.com'
+}
+{
+  _id: ObjectId('68223fb8881223b0dbd30364'),
+  nombre: 'Luis Torres',
+  edad: 35,
+  correo: 'luis.torres@urosario.com'
+}
+db.usuario.find({nombre:{$eq:"Ana Lopez"}})
+{
+  _id: ObjectId('68223fb8881223b0dbd30363'),
+  nombre: 'Ana Lopez',
+  edad: 25,
+  correo: 'ana.lopez@urosario.com'
+}
+db.usuario.find({edad:{$gte:30}})
+
+db.createCollection("producto")
+db.usuario.updateOne({nombre:"Juan Perez"},{$set:{edad:31}})
+db.usuario.updateMany({edad:{$gte:30}},{$set:{activo:true}})
+db.usuario.deleteOne({nombre:"Luis Torres"})
+db.usuario.deleteMany({edad:{$lt:30}})
+db.producto.insertMany([{nombre:"portatil acer", precio:1000, categoria:"electronica"},
+                        {nombre:"celular samsung", precio:500, categoria:"electronica"},
+                        {nombre:"vestido rosa", precio:300, categoria:"ropa"},
+                        {nombre:"mesa de planchar", pecio:100, categoria:"hogar"},
+                        {nombre:"manzanas", precio:5, categoria:"frutas"}])
+
+db.producto.find({precio:{$gt:100}})
+db.producto.find().sort({amount:-1})
+
+db.producto.updateMany({precio:{$gt:4}},{$set:{stock:true}})
+
+db.producto.updateMany({precio:{$gt:500}},{$set:{stock:false}})
+db.producto.deleteMany({precio:{$lt:50}})
+
+
+
+
+
+
+
